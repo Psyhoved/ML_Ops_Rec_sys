@@ -9,8 +9,8 @@ def clear_one_buy_client(df: pd.DataFrame, n=10) -> pd.DataFrame:
      которые сделали меньше n покупок
 
      parameters:
-      df (pd.DataFrame): датафрейм, который нужно очистить
-      n (int): Число покупок, по которому отсеиваются клиенты
+     df (pd.DataFrame): датафрейм, который нужно очистить
+     n (int): Число покупок, по которому отсеиваются клиенты
 
      return:
       pd.DataFrame: очищенный датафрейм
@@ -22,6 +22,13 @@ def clear_one_buy_client(df: pd.DataFrame, n=10) -> pd.DataFrame:
 
 
 def data_preparation(df: pd.DataFrame) -> pd.DataFrame:
+    """
+
+    :param df:
+    :return:
+    """
+    print('Подготовка trainset')
+
     data_prep = df[['user_id', 'КодНоменклатуры', 'rating']].reset_index(drop=True)
     data_prep = data_prep.rename(columns={'user_id': 'userID', 'КодНоменклатуры': 'itemID'})
 
@@ -61,6 +68,11 @@ def get_top_n(predictions: list, n_pred=10) -> dict:
 
 
 def rec_to_df(top_n: pd.DataFrame) -> pd.DataFrame:
+    """
+
+    :param top_n:
+    :return:
+    """
     # Сохраняем всё в один датафрейм
     recomend_rate_df = pd.DataFrame()
     for elem in top_n.keys():
@@ -71,3 +83,22 @@ def rec_to_df(top_n: pd.DataFrame) -> pd.DataFrame:
     # расставляем колонки в нужном порядке
     recomend_rate_df = recomend_rate_df[['Клиент', 'Номенлатура', 'Оценка']]
     return recomend_rate_df
+
+
+def store_sort_df(df: pd.DataFrame, n=50) -> pd.DataFrame:
+    """
+
+    :param df:
+    :param n:
+    :return:
+    """
+    print('Подготовка датафрейма')
+
+    # магазин с наибольшим числом покупок
+    store = df['КодМагазина'].value_counts().index[n]
+    # Оставляем данные только по одному магазину
+    rozn_rec_data_s1 = df[df['КодМагазина'] == store]
+
+    print(f'Данные по магазину, занимающему {n}-е место по кол-ву продаж, собраны')
+
+    return rozn_rec_data_s1
