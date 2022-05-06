@@ -1,42 +1,30 @@
 import pandas as pd
 
 from surprise import SVD
-from surprise.model_selection import cross_validate
 
 from data_prep import data_preparation
-from data_prep import get_top_n
-from data_prep import store_sort_df
+from data_prep import lighter_data
+from data_prep import rec_to_df
+
+from model_rec import make_rec
 
 rozn_rec_data = pd.read_csv('Data_rec_sys_ML_ops.csv')
 
-n = 30
-# Выбор данных по конкретному магазину
-rozn_rec_data_s1 = store_sort_df(rozn_rec_data, n=n)
+store_n = 55  # позиция магазина в списке ранжированном по кол-ву продаж
+n_buy = 5  # минимальное кол-во покупок клиента, для прохождения в алгоритм
 
-# Подготовка данных для surprise
-data_prep = data_preparation(rozn_rec_data_s1)
-trainset = data_prep.build_full_trainset()
+# "Облегчаем" данные, оставляя только один магазин и клиентов с n_buy+ покупками
+light_data = lighter_data(rozn_rec_data, store_n=store_n, n_buy=n_buy)
 
-print('Обучение алгоритма')
-# обучение алгоритма
-algo = SVD()  # KNNBasic()
-algo.fit(trainset)
+data_prep_df = data_preparation(light_data)
 
-print('Выполняется кросс-валидация')
-# кроссвалидация
-cross_validate(algo, data_prep, measures=['RMSE', 'MAE'], cv=4, verbose=True)
-
-print('Подготовка testset')
-# Подготовка тестового датасета
-testset = trainset.build_anti_testset()
-
-print('формирование прогноза')
-# прогноз для тестового датасета
-# Than predict ratings for all pairs (u, i) that are NOT in the training set.
-predictions = algo.test(testset)
-
-print('Вывод top-n рекомендаций')
-# Сохраняем топ-n рекомендаций для каждого юзера в словарь
-top_n = get_top_n(predictions, n_pred=10)
+# Генерируем top-n рекомендаций для заданных клиентов и номенклатур
+top_n = make_rec(data_prep_df,
+                 n_pred=10,
+                 gridsearch=False,
+                 alg=SVD,
+                 opt_by='rmse')
+# Преобразуем словарь с рекомендациями в таблицу DataFrame
+top_n = rec_to_df(top_n)
 
 print(top_n)

@@ -28,6 +28,7 @@ def data_preparation(df: pd.DataFrame) -> pd.DataFrame:
     :return:
     """
     print('Подготовка trainset')
+    print('--------------------------------------------------------------------------')
 
     data_prep = df[['user_id', 'КодНоменклатуры', 'rating']].reset_index(drop=True)
     data_prep = data_prep.rename(columns={'user_id': 'userID', 'КодНоменклатуры': 'itemID'})
@@ -91,6 +92,8 @@ def store_sort_df(df: pd.DataFrame, store_n=50) -> pd.DataFrame:
     :param store_n:
     :return:
     """
+
+    print('--------------------------------------------------------------------------')
     print('Подготовка датафрейма')
     print('--------------------------------------------------------------------------')
 
