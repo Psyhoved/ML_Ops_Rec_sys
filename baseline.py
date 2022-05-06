@@ -1,6 +1,7 @@
 import pandas as pd
 
 from surprise import SVD
+from surprise.model_selection import cross_validate
 
 from data_prep import data_preparation
 from data_prep import get_top_n
@@ -21,9 +22,14 @@ print('Обучение алгоритма')
 algo = SVD()  # KNNBasic()
 algo.fit(trainset)
 
+print('Выполняется кросс-валидация')
+# кроссвалидация
+cross_validate(algo, data_prep, measures=['RMSE', 'MAE'], cv=4, verbose=True)
+
 print('Подготовка testset')
 # Подготовка тестового датасета
 testset = trainset.build_anti_testset()
+
 print('формирование прогноза')
 # прогноз для тестового датасета
 # Than predict ratings for all pairs (u, i) that are NOT in the training set.

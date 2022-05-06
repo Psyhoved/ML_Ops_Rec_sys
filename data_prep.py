@@ -4,19 +4,19 @@ from surprise import Dataset
 from collections import defaultdict
 
 
-def clear_one_buy_client(df: pd.DataFrame, n=10) -> pd.DataFrame:
+def clear_one_buy_client(df: pd.DataFrame, n_buy=10) -> pd.DataFrame:
     """ Функция очищает датафрейм от клиентов,
-     которые сделали меньше n покупок
+      которые сделали меньше n покупок
 
-     parameters:
-     df (pd.DataFrame): датафрейм, который нужно очистить
-     n (int): Число покупок, по которому отсеиваются клиенты
+      parameters:
+      df (pd.DataFrame): датафрейм, который нужно очистить
+      n (int): Число покупок, по которому отсеиваются клиенты
 
-     return:
+      return:
       pd.DataFrame: очищенный датафрейм
     """
     a = df['user_id'].value_counts().reset_index()
-    df_less_10 = a[a['user_id'] > n]
+    df_less_10 = a[a['user_id'] > n_buy]
     df_less_10 = df_less_10[['index']].rename(columns={'index': 'user_id'})
     return df_less_10.merge(df)
 
@@ -37,9 +37,8 @@ def data_preparation(df: pd.DataFrame) -> pd.DataFrame:
     data_prep = Dataset.load_from_df(data_prep[['userID', 'itemID', 'rating']], reader)
     return data_prep
 
-    # Функция для вывода топ-N рекомендаций для каждого пользователя
 
-
+# Функция для вывода топ-N рекомендаций для каждого пользователя
 def get_top_n(predictions: list, n_pred=10) -> dict:
     """Return the top-N recommendation for each user from a set of predictions.
 
@@ -67,7 +66,7 @@ def get_top_n(predictions: list, n_pred=10) -> dict:
     return top_n
 
 
-def rec_to_df(top_n: pd.DataFrame) -> pd.DataFrame:
+def rec_to_df(top_n: dict) -> pd.DataFrame:
     """
 
     :param top_n:
@@ -85,20 +84,36 @@ def rec_to_df(top_n: pd.DataFrame) -> pd.DataFrame:
     return recomend_rate_df
 
 
-def store_sort_df(df: pd.DataFrame, n=50) -> pd.DataFrame:
+def store_sort_df(df: pd.DataFrame, store_n=50) -> pd.DataFrame:
     """
 
     :param df:
-    :param n:
+    :param store_n:
     :return:
     """
     print('Подготовка датафрейма')
+    print('--------------------------------------------------------------------------')
 
     # магазин с наибольшим числом покупок
-    store = df['КодМагазина'].value_counts().index[n]
+    store = df['КодМагазина'].value_counts().index[store_n]
     # Оставляем данные только по одному магазину
     rozn_rec_data_s1 = df[df['КодМагазина'] == store]
 
-    print(f'Данные по магазину, занимающему {n}-е место по кол-ву продаж, собраны')
+    print(f'Данные по магазину, занимающему {store_n}-е место по кол-ву продаж, собраны')
+    print('--------------------------------------------------------------------------')
 
+    return rozn_rec_data_s1
+
+
+def lighter_data(df: pd.DataFrame, store_n=50, n_buy=10) -> pd.DataFrame:
+    """
+
+    :param df:
+    :param store_n:
+    :param n_buy:
+    :return:
+    """
+    # выбор магазина для генерации рекомендаций
+    rozn_rec_data_s1 = store_sort_df(df, store_n=store_n)
+    rozn_rec_data_s1 = clear_one_buy_client(rozn_rec_data_s1, n_buy=n_buy)
     return rozn_rec_data_s1
