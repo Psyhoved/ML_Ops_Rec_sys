@@ -6,7 +6,7 @@ from surprise.model_selection import GridSearchCV
 from data_prep import get_top_n
 
 
-rozn_rec_data = pd.read_csv('Data_rec_sys_ML_ops.csv')
+rozn_rec_data = pd.read_csv('market_sales.csv')
 
 
 def gssv(data_prep_df: pd.DataFrame, alg: type, param_grid: dict, measures, opt_by="rmse"):
@@ -53,7 +53,7 @@ def make_rec(data_prep_df: pd.DataFrame, n_pred=10,
 
     # Опциональнй гридсёрч по заданным параметрам
     if gridsearch:
-        # подбор оптимальных параметров модели by gridsearch
+        # подбор оптимальных параметров модели by grid_search
         param_grid = {'n_epochs': [10, 20, 30], 'lr_all': [0.002, 0.005, 0.01],
                       'reg_all': [0.02, 0.4, 0.6]}
 

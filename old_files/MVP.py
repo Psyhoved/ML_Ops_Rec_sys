@@ -8,7 +8,7 @@ from data_prep import rec_to_df
 
 from model_rec import make_rec
 
-rozn_rec_data = pd.read_csv('Data_rec_sys_ML_ops.csv')
+rozn_rec_data = pd.read_csv('market_sales.csv')
 
 store_n = 55  # позиция магазина в списке ранжированном по кол-ву продаж
 n_buy = 5  # минимальное кол-во покупок клиента, для прохождения в алгоритм
