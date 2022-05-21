@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
+import streamlit as st
 import click
 
 
@@ -20,9 +21,9 @@ def clean_data(input_path: str, output_path: str, store_position: int, min_num_p
                             'license': np.int8,
                             'type_by_nomenclature': np.str,
                             'rating': np.int32})
-    print('--------------------------------------------------------------------------')
-    print('Dataframe clean starts')
-    print('--------------------------------------------------------------------------')
+    # print('--------------------------------------------------------------------------')
+    # print('Dataframe clean starts')
+    # print('--------------------------------------------------------------------------')
 
     # getting an id store placed on :store_position place in store list sorted by purchases
     # получение идентификатора магазина, размещенного на месте :store_position в списке магазинов,
@@ -33,9 +34,11 @@ def clean_data(input_path: str, output_path: str, store_position: int, min_num_p
     # получение данных о покупках по выбранному магазину
     one_store_data = df[df['store_id'] == store]
 
-    print(f'Data collected for the store ranked {store_position} in terms of sales')
-    print(f'Данные по магазину, занимающему {store_position}-е место по кол-ву продаж, собраны')
-    print('--------------------------------------------------------------------------')
+    st.write(f'Data collected for the store ranked {store_position} in terms of sales')
+
+    # print(f'Data collected for the store ranked {store_position} in terms of sales')
+    # print(f'Данные по магазину, занимающему {store_position}-е место по кол-ву продаж, собраны')
+    # print('--------------------------------------------------------------------------')
 
     users_by_purchases = one_store_data['user_id'].value_counts().reset_index()
     users_by_purchases = users_by_purchases.rename(columns={'index': 'user_id', 'user_id': 'purchases'})

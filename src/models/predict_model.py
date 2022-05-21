@@ -4,6 +4,7 @@ import joblib as jb
 from collections import defaultdict
 from typing import List
 from .prepare_dataset import prepare_dataset
+import streamlit as st
 
 
 # @click.command()
@@ -16,9 +17,12 @@ def predict_model(input_paths: List[str], output_path: str, num_predicts):
     # test_data = pd.read_csv(input_paths[0])
     model = jb.load(input_paths[1])
 
-    print('--------------------------------------------------------------------------')
-    print('Генерация рекомендаций')
-    print('--------------------------------------------------------------------------')
+    st.write(80 * '-')
+    st.write('Generate recommends')
+    st.write(80 * '-')
+    # print('--------------------------------------------------------------------------')
+    # print('Генерация рекомендаций')
+    # print('--------------------------------------------------------------------------')
 
     # прогноз для тестового датасета
     # Than predict ratings for all pairs (u, i) that are NOT in the training set.
@@ -40,9 +44,12 @@ def predict_model(input_paths: List[str], output_path: str, num_predicts):
         for key, value in top_n.items():
             f.writelines(f"{key}: {value} ")
 
-    print(top_n.items())
+    # print(top_n.items())
+    st.table(top_n.items())
+    # selected_user = st.selectbox('Choose user',
+    #              top_n.items())
+    # st.write(top_n.items()[top_n.items()[0] == selected_user])
 
 
 if __name__ == '__main__':
     predict_model()
-
