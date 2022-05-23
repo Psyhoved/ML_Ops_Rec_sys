@@ -24,3 +24,5 @@ env/Lib/site-packages/streamlit/watcher/local_sources_watcher.py
 Добавить в модули, использующие библиотеку streamlit следующий код:
 # import warnings
 # warnings.filterwarnings('ignore')
+
+2. Запускаем стимлит: streamlit run [path_to_start]/start.py
