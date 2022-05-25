@@ -25,8 +25,9 @@ cache:
 before_script:
   - python --version  # For debugging
   - python -m venv ./venv
+  - Invoke-Expression ( "venv/Skripts/activate.ps1")
+  - pip install -r requirements.txt
 
 type_test:
   script:
-    - pip install mypy
-    - mypy --ignore-missing-imports src
+     - mypy --ignore-missing-imports src
