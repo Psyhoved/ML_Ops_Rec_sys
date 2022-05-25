@@ -29,4 +29,5 @@ before_script:
 type_test:
   script:
     - pip install mypy
-    - mypy --ignore-missing-imports src  
+    - mypy --ignore-missing-imports src
+    -
