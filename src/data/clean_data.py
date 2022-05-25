@@ -9,11 +9,8 @@ import pandas as pd
 def load_row_data(row_data_url: str):
     """
 
-    Args:
-        row_data_url:
-
-    Returns:
-
+    :param row_data_url:
+    :return:
     """
     row_data = pd.read_csv(row_data_url, converters={'id_subgroup': str, 'user_id': str})
     return row_data
@@ -22,11 +19,8 @@ def load_row_data(row_data_url: str):
 def clean_data(row_data):
     """
 
-    Args:
-        row_data:
-
-    Returns:
-
+    :param row_data:
+    :return:
     """
     # arrange columns in more convenient order
     cleaned_data = row_data[['Период', 'user_id', 'КодМагазина', 'КодНоменклатуры', 'id_subgroup',

@@ -11,11 +11,8 @@ from src.data.clean_data import load_row_data, clean_data
 def make_popularity_abd_sum_list(cleaned_data: pd.DataFrame) -> tuple:
     """
 
-    Args:
-        cleaned_data:
-
-    Returns:
-
+    :param cleaned_data:
+    :return:
     """
     popularity_list_nom = cleaned_data['item_id'].value_counts().reset_index()
     popularity_list_nom.columns = ['item_id', 'popularity']
@@ -27,12 +24,9 @@ def make_popularity_abd_sum_list(cleaned_data: pd.DataFrame) -> tuple:
 def prepare_ratings(sum_list_nom: pd.DataFrame, popularity_list_nom: pd.DataFrame) -> pd.DataFrame:
     """
 
-    Args:
-        sum_list_nom:
-        popularity_list_nom:
-
-    Returns:
-
+    :param sum_list_nom:
+    :param popularity_list_nom:
+    :return:
     """
     prep_rating = sum_list_nom.merge(popularity_list_nom, how='left', on='item_id')
     prep_rating = prep_rating[prep_rating['popularity'] >= 10]
@@ -45,13 +39,10 @@ def prepare_ratings(sum_list_nom: pd.DataFrame, popularity_list_nom: pd.DataFram
 def make_ratings(prep_rating: pd.DataFrame, sum_coef=1, pop_coef=0.5) -> pd.DataFrame:
     """
 
-    Args:
-        prep_rating:
-        sum_coef:
-        pop_coef:
-
-    Returns:
-
+    :param prep_rating:
+    :param sum_coef:
+    :param pop_coef:
+    :return:
     """
     prep_rating['rating_sum_S_and_P'] = (sum_coef * prep_rating['sum_sale_log']) + (
             pop_coef * prep_rating['popularity_log'])
@@ -64,12 +55,9 @@ def make_ratings(prep_rating: pd.DataFrame, sum_coef=1, pop_coef=0.5) -> pd.Data
 def prep_data(cleaned_data: pd.DataFrame, rating_coef: pd.DataFrame) -> pd.DataFrame:
     """
 
-    Args:
-        cleaned_data:
-        rating_coef:
-
-    Returns:
-
+    :param cleaned_data:
+    :param rating_coef:
+    :return:
     """
     prepare_data = cleaned_data.merge(rating_coef.drop('sum_sale', axis=1),
                                       how='left',
@@ -82,11 +70,8 @@ def prep_data(cleaned_data: pd.DataFrame, rating_coef: pd.DataFrame) -> pd.DataF
 def build_features(row_data_url: str) -> pd.DataFrame:
     """
 
-    Args:
-        row_data_url:
-
-    Returns:
-
+    :param row_data_url:
+    :return:
     """
     row_data = load_row_data(row_data_url)
     cleaned_data = clean_data(row_data)
