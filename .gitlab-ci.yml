@@ -25,4 +25,8 @@ cache:
 before_script:
   - python --version  # For debugging
   - python -m venv ./venv
-  
+
+type_test:
+  script:
+    - pip install mypy
+    - mypy --ignore-missing-imports src  
