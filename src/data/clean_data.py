@@ -5,6 +5,8 @@ This module load and clean row data
 # -*- coding: utf-8 -*-
 import pandas as pd
 
+URL = 'https://www.dropbox.com/s/nhswkhngncsi8n6/Data_rec_sys_row.csv?dl=1'
+
 
 def load_row_data(row_data_url: str):
     """
@@ -33,4 +35,5 @@ def clean_data(row_data):
 
 
 if __name__ == "__main__":
-    clean_data()
+    row_data = load_row_data(URL)
+    clean_data(row_data)

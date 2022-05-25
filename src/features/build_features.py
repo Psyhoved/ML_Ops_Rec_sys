@@ -7,6 +7,8 @@ import pandas as pd
 
 from src.data.clean_data import load_row_data, clean_data
 
+URL = 'https://www.dropbox.com/s/nhswkhngncsi8n6/Data_rec_sys_row.csv?dl=1'
+
 
 def make_popularity_abd_sum_list(cleaned_data: pd.DataFrame) -> tuple:
     """
@@ -85,3 +87,7 @@ def build_features(row_data_url: str) -> pd.DataFrame:
 
     rec_sys_data = prep_data(cleaned_data, rating_coef)
     return rec_sys_data
+
+
+if __name__ == "__main__":
+    build_features(URL)
