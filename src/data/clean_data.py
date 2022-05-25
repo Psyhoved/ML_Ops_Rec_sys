@@ -1,3 +1,7 @@
+"""
+add because pylint
+This module load and clean row data
+"""
 # -*- coding: utf-8 -*-
 import pandas as pd
 
@@ -16,6 +20,14 @@ def load_row_data(row_data_url: str):
 
 
 def clean_data(row_data):
+    """
+
+    Args:
+        row_data:
+
+    Returns:
+
+    """
     # arrange columns in more convenient order
     cleaned_data = row_data[['Период', 'user_id', 'КодМагазина', 'КодНоменклатуры', 'id_subgroup',
                              'Сумма', 'ABC_анализ_Номенклатура', 'Лицензия']]
