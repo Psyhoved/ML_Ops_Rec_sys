@@ -5,6 +5,7 @@ from surprise import SVD
 from surprise.model_selection import GridSearchCV
 from surprise.model_selection import cross_validate
 from typing import List
+import streamlit as st
 from .prepare_dataset import prepare_dataset
 
 
@@ -27,16 +28,22 @@ def train_model(input_path: str, output_paths: List[str], grid_search=True, alg:
     # test_data = train_data.build_anti_testset()
     # Опциональнй гридсёрч по заданным параметрам
     if grid_search:
-        print('Проводится GridSearch')
+        st.write('GridSearch in process...')
+        # print('Проводится GridSearch')
 
         gs = GridSearchCV(alg, PARAM_GRID, measures=MEASURES, cv=3)
         gs.fit(prepared_df)  # Почему делааем гридсерч на всех данных? Проверить качество при обучекнии на x_train
 
-        print(80*'-')
-        print(f'best_score {opt_by}: {gs.best_score[opt_by]}')
-        print(f'best_params {opt_by}: {gs.best_params[opt_by]}')
+        st.write(80*'-')
+        st.write(f'best_score {opt_by}: {gs.best_score[opt_by]}')
+        st.write(f'best_params {opt_by}: {gs.best_params[opt_by]}')
+        st.write(80 * '-')
 
-        print(80*'-')
+        # print(80*'-')
+        # print(f'best_score {opt_by}: {gs.best_score[opt_by]}')
+        # print(f'best_params {opt_by}: {gs.best_params[opt_by]}')
+        #
+        # print(80*'-')
 
         # We can now use the algorithm that yields the best rmse:
         model = gs.best_estimator['rmse']
@@ -47,11 +54,15 @@ def train_model(input_path: str, output_paths: List[str], grid_search=True, alg:
         model = alg()  # KNNBasic()
         model.fit(train_data)
 
-        print('Проводится Кроссвалидация')
-        print(80*'-')
+        st.write('CrossValidate in process...')
+        st.write(80 * '-')
+        # print('Проводится Кроссвалидация')
+        # print(80*'-')
 
         # кроссвалидация
         cross_val_results = cross_validate(model, prepared_df, measures=MEASURES, cv=4, verbose=True)
+        st.write('Evaluating RMSE, MAE of algorithm SVD on 4 split(s).')
+        st.table(cross_val_results)
         # print(cross_val_results)
         with open(output_paths[1], 'w') as f:
             for key, value in cross_val_results.items():

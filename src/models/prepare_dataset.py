@@ -2,6 +2,7 @@ import click
 import pandas as pd
 from surprise import Reader
 from surprise import Dataset
+import streamlit as st
 from typing import List
 
 
@@ -11,8 +12,10 @@ from typing import List
 def prepare_dataset(input_filepath: str):
     df = pd.read_csv(input_filepath)
 
-    print('Подготовка данных')
-    print('--------------------------------------------------------------------------')
+    st.write('Preparing data...')
+
+    # print('Подготовка данных')
+    # print('--------------------------------------------------------------------------')
 
     prepared_df = df[['user_id', 'item_id', 'rating']].reset_index(drop=True)
 
