@@ -21,22 +21,29 @@ def clear_one_buy_client(df: pd.DataFrame, n_buy=10) -> pd.DataFrame:
     return df_less_10.merge(df)
 
 
-def data_preparation(df: pd.DataFrame) -> pd.DataFrame:
+def data_preparation(df: pd.DataFrame, rating: str) -> pd.DataFrame:
     """
 
     :param df:
+    :param rating:
     :return:
     """
     print('Подготовка trainset')
     print('--------------------------------------------------------------------------')
 
-    data_prep = df[['user_id', 'КодНоменклатуры', 'rating']].reset_index(drop=True)
-    data_prep = data_prep.rename(columns={'user_id': 'userID', 'КодНоменклатуры': 'itemID'})
+    data_prep = df[['user_id', 'КодНоменклатуры', rating]].reset_index(drop=True)
+    if data_prep[rating].dtypes != int:
+        data_prep[rating] = data_prep[rating].round().astype('int')
+
+    data_prep = data_prep.rename(columns={'user_id': 'userID', 'КодНоменклатуры': 'itemID', rating: 'rating'})
+
+    min_rating = data_prep['rating'].min()
+    max_rating = data_prep['rating'].max()
 
     # A reader is still needed but only the rating_scale param is requiered.
-    reader = Reader(rating_scale=(1, 10))
-    data_prep = Dataset.load_from_df(data_prep[['userID', 'itemID', 'rating']], reader)
-    return data_prep
+    reader = Reader(rating_scale=(min_rating, max_rating))
+    data_prep_df = Dataset.load_from_df(data_prep[['userID', 'itemID', 'rating']], reader)
+    return data_prep_df
 
 
 # Функция для вывода топ-N рекомендаций для каждого пользователя
@@ -77,11 +84,11 @@ def rec_to_df(top_n: dict) -> pd.DataFrame:
     recomend_rate_df = pd.DataFrame()
     for elem in top_n.keys():
         rate_df = pd.DataFrame(top_n[elem],
-                               columns=['Номенлатура', 'Оценка'])
-        rate_df['Клиент'] = elem
+                               columns=['КодНоменклатуры', 'Оценка'])
+        rate_df['user_id'] = elem
         recomend_rate_df = pd.concat([recomend_rate_df, rate_df])
     # расставляем колонки в нужном порядке
-    recomend_rate_df = recomend_rate_df[['Клиент', 'Номенлатура', 'Оценка']]
+    recomend_rate_df = recomend_rate_df[['user_id', 'КодНоменклатуры', 'Оценка']]
     return recomend_rate_df
 
 
@@ -92,8 +99,6 @@ def store_sort_df(df: pd.DataFrame, store_n=50) -> pd.DataFrame:
     :param store_n:
     :return:
     """
-
-    print('--------------------------------------------------------------------------')
     print('Подготовка датафрейма')
     print('--------------------------------------------------------------------------')
 
