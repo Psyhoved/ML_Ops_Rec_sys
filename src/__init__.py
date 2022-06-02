@@ -1,4 +1,4 @@
-from .data.clean_data import clean_data
+from .data.clean_data import rename_columns
 from .features.build_features import build_features
 from .models.prepare_dataset import prepare_dataset
 from .models.train_model import train_model
